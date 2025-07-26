@@ -1,7 +1,4 @@
 /*
- * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
- * Copyright (c) 2024, GigaDevice Semiconductor Inc.
- *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the License); you may
@@ -22,10 +19,12 @@
  */
 
 .syntax unified
+.cpu cortex-m23
+.fpu softvfp
 .thumb
 
 /* Vector Table */
-.section .vectors, "a"
+.section .isr_vector, "a",%progbits
 .global g_pfnVectors
 .type g_pfnVectors, %object
 
