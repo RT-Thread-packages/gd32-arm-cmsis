@@ -2,12 +2,12 @@
 ;    \file    startup_gd32f5xx.s
 ;    \brief   start up file
 ;
-;    \version 2024-07-31, V1.1.0, firmware for GD32F5xx
+;    \version 2025-08-08, V1.3.0, firmware for GD32F5xx
 ;*/
 ;
 ;/*
 ; * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
-; * Copyright (c) 2024, GigaDevice Semiconductor Inc.
+; * Copyright (c) 2025, GigaDevice Semiconductor Inc.
 ; *
 ; * SPDX-License-Identifier: Apache-2.0
 ; *
@@ -129,7 +129,7 @@ __Vectors       DCD     __initial_sp                            ; Top of Stack
                 DCD     SPI2_IRQHandler                         ; 67:SPI2
                 DCD     UART3_IRQHandler                        ; 68:UART3
                 DCD     UART4_IRQHandler                        ; 69:UART4
-                DCD     TIMER5_DAC_IRQHandler                   ; 70:TIMER5 and DAC0 DAC1 Underrun error
+                DCD     TIMER5_DAC_IRQHandler                   ; 70:TIMER5 and DAC0_OUT0 DAC0_OUT1 Underrun error
                 DCD     TIMER6_IRQHandler                       ; 71:TIMER6
                 DCD     DMA1_Channel0_IRQHandler                ; 72:DMA1 Channel0
                 DCD     DMA1_Channel1_IRQHandler                ; 73:DMA1 Channel1
@@ -189,17 +189,31 @@ __Vectors_Size  EQU     __Vectors_End - __Vectors
 ;/* reset Handler */
 Reset_Handler   PROC
                 EXPORT  Reset_Handler                     [WEAK]
+
+                LDR     R0, =0x10000000
+                MOV     R1, #64
+                LSL     R1, R1, #10
+                MOV     R2, #0x00
+TCMSRAM_INIT    STM     R0!, {R2}
+                SUBS    R1, R1, #4
+                CMP     R1, #0x00
+                BNE     TCMSRAM_INIT
+
+                LDR     R0, =0x1FFF7A20
+                LDR     R2, [R0]
+                SUBS    R2, R2, #64
+                LDR     R0, = 0x0000FFFF
+                AND     R2, R2, R0
+                LSL     R2, R2, #10
+                LDR     R1, =0x20000000
+                MOV     R0, #0x00
+SRAM_INIT       STM     R1!, {R0}
+                SUBS    R2, R2, #4
+                CMP     R2, #0x00
+                BNE     SRAM_INIT
+
                 IMPORT  SystemInit
                 IMPORT  __main
-                IMPORT |Image$$RW_IRAM1$$RW$$Base|
-
-                LDR     R0, =|Image$$RW_IRAM1$$RW$$Base|
-                ADD     R1, R0, #0x8000
-                LDR     R2, =0x0
-MEM_INIT        STRD    R2, R2, [ R0 ] , #8
-                CMP     R0, R1
-                BNE     MEM_INIT
-
                 LDR     R0, =SystemInit
                 BLX     R0
                 LDR     R0, =__main
