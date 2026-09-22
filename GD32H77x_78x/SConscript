@@ -1,0 +1,26 @@
+import rtconfig
+from building import *
+
+cwd = GetCurrentDir()
+
+src = Split('''
+GD/GD32H77x_78x/Source/system_gd32h77x_78x.c
+''')
+
+path = [
+    cwd + '/GD/GD32H77x_78x/Include',
+    cwd,
+]
+
+if rtconfig.PLATFORM in ['gcc', 'llvm-arm']:
+    src += ['GD/GD32H77x_78x/Source/GCC/startup_gd32h77x_78x.S']
+elif rtconfig.PLATFORM in ['armcc', 'armclang']:
+    src += ['GD/GD32H77x_78x/Source/ARM/startup_gd32h77x_78x.s']
+elif rtconfig.PLATFORM in ['iccarm']:
+    src += ['GD/GD32H77x_78x/Source/IAR/startup_gd32h77x_78x.s']
+
+CPPDEFINES = ['USE_STDPERIPH_DRIVER']
+
+group = DefineGroup('Libraries', src, depend = ['SOC_SERIES_GD32H77x_H78X'], CPPPATH = path, CPPDEFINES = CPPDEFINES)
+
+Return('group')
