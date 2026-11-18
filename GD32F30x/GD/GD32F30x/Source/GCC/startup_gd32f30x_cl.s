@@ -98,6 +98,7 @@ g_pfnVectors:
     .word     DMA1_Channel1_IRQHandler          // 73:DMA1 Channel1
     .word     DMA1_Channel2_IRQHandler          // 74:DMA1 Channel2
     .word     DMA1_Channel3_IRQHandler          // 75:DMA1 Channel3
+    .word     DMA1_Channel4_IRQHandler          // 76:DMA1 Channel4
     .word     ENET_IRQHandler                   // 77:Ethernet
     .word     ENET_WKUP_IRQHandler              // 78:Ethernet Wakeup through EXTI Line
     .word     CAN1_TX_IRQHandler                // 79:CAN1 TX
@@ -249,9 +250,7 @@ Default_Handler:
     IRQ TIMER7_UP_IRQHandler
     IRQ TIMER7_TRG_CMT_IRQHandler
     IRQ TIMER7_Channel_IRQHandler
-    IRQ ADC2_IRQHandler
     IRQ EXMC_IRQHandler
-    IRQ SDIO_IRQHandler
     IRQ TIMER4_IRQHandler
     IRQ SPI2_IRQHandler
     IRQ UART3_IRQHandler
@@ -262,6 +261,7 @@ Default_Handler:
     IRQ DMA1_Channel1_IRQHandler
     IRQ DMA1_Channel2_IRQHandler
     IRQ DMA1_Channel3_IRQHandler
+    IRQ DMA1_Channel4_IRQHandler
     IRQ ENET_IRQHandler
     IRQ ENET_WKUP_IRQHandler
     IRQ CAN1_TX_IRQHandler
